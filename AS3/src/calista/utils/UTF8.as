@@ -21,92 +21,92 @@
   
 */
 
-package calista.utils
+package calista.utils 
 {
-    /**
-     * Encode and decode between multi-byte Unicode characters and UTF-8 multiple single-byte character encoding.
-     */
-    public class UTF8 
-    {
-        /**
-         * Encodes multi-byte Unicode string into utf-8 multiple single-byte characters (BMP / basic multilingual plane only). 
-         * Chars in range U+0080 - U+07FF are encoded in 2 chars, U+0800 - U+FFFF in 3 chars
-         * @param uni The Unicode string to be encoded as UTF-8.
-         * @returns The encoded string.
-         */
-        public static function encode( uni:String ):String 
-        {
-            var utf:String = uni.replace
-            (
-                _reg1 ,
-                function(c:String):String
-                { 
-                    var cc:Number = c.charCodeAt(0);
-                    return String.fromCharCode(0xc0 | cc>>6, 0x80 | cc&0x3f); 
-                }
-            ) ;
-            utf = utf.replace
-            (
-                _reg2 ,
-                function( c:String ):String
-                { 
-                    var cc:Number = c.charCodeAt(0); 
-                    return String.fromCharCode(0xe0 | cc>>12, 0x80 | cc>>6&0x3F, 0x80 | cc&0x3f); 
-                }
-            );
-            return utf ;
-        }
-        
-        /**
-         * Decode utf-8 encoded string back into multi-byte Unicode characters.
-         * @param utf UTF-8 string to be decoded back to Unicode
-         * @returns The decoded string.
-         */
-        public static function decode( utf:String ):String 
-        {
-            var uni:String = utf.replace
-            (
-                _reg3 ,
-                function(c:String):String
-                { 
-                    var cc:Number = ( c.charCodeAt(0) & 0x1F ) << 6 | c.charCodeAt(1) & 0x3F ;
-                    return String.fromCharCode( cc ) ; 
-                }
-            ) ;
-            uni = uni.replace
-            (
-                _reg4 ,
-                function( c:String ):String
-                { 
-                    var cc:Number = ( ( c.charCodeAt(0) & 0x0F ) <<12 ) | ( ( c.charCodeAt(1) & 0x3F ) << 6 ) | ( c.charCodeAt(2) & 0x3F ) ; 
-                    return String.fromCharCode( cc ); 
-                }
-            ) ;
-            return uni ;
-        }
-        
-        /**
-         * U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
-         * @private
-         */
-        private static const _reg1:RegExp = /[\u0080-\u07FF]/g ;
-        
-        /**
-         * U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
-         * @private
-         */
-        private static const _reg2:RegExp = /[\u0800-\uFFFF]/g ;
-        
-        /**
-         * 2-byte chars
-         * @private
-         */
-        private static const _reg3:RegExp = /[\u00c0-\u00df][\u0080-\u00bf]/g ;
-        
-        /**
-         * 3-byte chars
-         * @private
-         */
-        private static const _reg4:RegExp = /[\u00e0-\u00ef][\u0080-\u00bf][\u0080-\u00bf]/g ;
-    }
+	/**
+	 * Encode and decode between multi-byte Unicode characters and UTF-8 multiple single-byte character encoding.
+	 */
+	public class UTF8 
+	{
+		/**
+		 * Encodes multi-byte Unicode string into utf-8 multiple single-byte characters (BMP / basic multilingual plane only).
+		 * Chars in range U+0080 - U+07FF are encoded in 2 chars, U+0800 - U+FFFF in 3 chars
+		 * @param uni The Unicode string to be encoded as UTF-8.
+		 * @returns The encoded string.
+		 */
+		public static function encode(uni: String): String 
+		{
+			var utf: String = uni.replace
+			(
+				_reg1,
+				function (c: String, ... args): String 
+				{
+					var cc: Number = c.charCodeAt(0);
+					return String.fromCharCode(0xc0 | cc >> 6, 0x80 | cc & 0x3f);
+				}
+			);
+			utf = utf.replace
+				(
+				_reg2,
+				function (c: String, ... args): String 
+				{
+					var cc: Number = c.charCodeAt(0);
+					return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3F, 0x80 | cc & 0x3f);
+				}
+			);
+			return utf;
+		}
+
+		/**
+		 * Decode utf-8 encoded string back into multi-byte Unicode characters.
+		 * @param utf UTF-8 string to be decoded back to Unicode
+		 * @returns The decoded string.
+		 */
+		public static function decode(utf: String): String 
+		{
+			var uni: String = utf.replace
+			(
+				_reg3,
+				function (c: String, ... args): String 
+			{
+					var cc: Number = (c.charCodeAt(0) & 0x1F) << 6 | c.charCodeAt(1) & 0x3F;
+					return String.fromCharCode(cc);
+				}
+			);
+			uni = uni.replace
+			(
+				_reg4,
+				function (c: String, ... args): String 
+				{
+					var cc: Number = ((c.charCodeAt(0) & 0x0F) << 12) | ((c.charCodeAt(1) & 0x3F) << 6) | (c.charCodeAt(2) & 0x3F);
+					return String.fromCharCode(cc);
+				}
+			);
+			return uni;
+		}
+
+		/**
+		 * U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
+		 * @private
+		 */
+		private static const _reg1: RegExp = /[\u0080-\u07FF]/g;
+
+		/**
+		 * U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
+		 * @private
+		 */
+		private static const _reg2: RegExp = /[\u0800-\uFFFF]/g;
+
+		/**
+		 * 2-byte chars
+		 * @private
+		 */
+		private static const _reg3: RegExp = /[\u00c0-\u00df][\u0080-\u00bf]/g;
+
+		/**
+		 * 3-byte chars
+		 * @private
+		 */
+		private static const _reg4: RegExp = /[\u00e0-\u00ef][\u0080-\u00bf][\u0080-\u00bf]/g;
+	}
 }
